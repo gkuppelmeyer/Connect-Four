@@ -41,13 +41,17 @@ var modelPrototype = {
 	isValidMove: function(row,col){
 		if(this.getPlayer(row,col) == ""){
 			if(row != this.rows-1 && this.getPlayer(row+1,col) == ""){
+				//console.log("false");
 				return false;
 			} 
 			else{
+				//console.log("true");
 				return true;
 			}
 		} else {
+			//console.log("false");
 			return false;
+			
 		}
 	},
 
@@ -86,11 +90,11 @@ var modelPrototype = {
 	*/
 	playerWin: function(){
 		var winner;
-		for (var row = 0; row < this.rows; row++){
-			for (var col = 0; col < this.columns; col++){
+		for (var row = this.rows-1; row >= 0; row--){			
+			for (var col = this.columns-1; col >= 0; col--){
 				//needed?
-				
-				if(col >= (this.columns/2) - 1){
+				if(col >= 3){
+					//console.log("left");
 					//check left
 					if(this.getPlayer(row,col) == this.getPlayer(row,col-1) && this.getPlayer(row,col) == this.getPlayer(row,col-2) && this.getPlayer(row,col) == this.getPlayer(row,col-3) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -98,7 +102,8 @@ var modelPrototype = {
 						return winner;
 					}
 				}
-				if(col <= this.columns/2){
+				if(col <= this.columns - 4){
+					//console.log("right");
 					//check right
 					if(this.getPlayer(row,col) == this.getPlayer(row,col+1) && this.getPlayer(row,col) == this.getPlayer(row,col+2) && this.getPlayer(row,col) == this.getPlayer(row,col+3) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -107,7 +112,8 @@ var modelPrototype = {
 					}
 				}
 				//needed?
-				if(row >= this.rows/2 && row < this.rows){
+				if(row >= 3){
+					//console.log("up");
 					//check up
 					if(this.getPlayer(row,col) == this.getPlayer(row-1,col) && this.getPlayer(row,col) == this.getPlayer(row-2,col) && this.getPlayer(row,col) == this.getPlayer(row-3,col) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -115,7 +121,8 @@ var modelPrototype = {
 						return winner;
 					}
 				}
-				if(row <= (this.rows/2) - 1){
+				if(row <= this.rows - 4){
+					//console.log("down");
 					//check down
 					if(this.getPlayer(row,col) == this.getPlayer(row+1,col) && this.getPlayer(row,col) == this.getPlayer(row+2,col) && this.getPlayer(row,col) == this.getPlayer(row+3,col) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -123,15 +130,17 @@ var modelPrototype = {
 						return winner;
 					}
 				}
-				if(row <= (this.rows/2) - 1 && col <= this.columns/2){
+				if(row <= this.rows - 4 && col <= this.columns - 4){
+					//console.log("diag down right");
 					//check diag down right
-					if(this.getPlayer(row,col) == this.getPlayer(row+1,col+1) && this.getPlayer(row,col) == this.getPlayer(row+2,col+2) && this.getPlayer(row,col) == this.getPlayer(row+3,col+3) && this.getPlayer(row,col) != ""){
+					if(this.getPlayer(row,col) == this.getPlayer(row+1,col+1) && this.getPlayer(row,col) == this.getPlayer(row+2,col+2) && this.getPlayer(row,col) == this.getPlayer(row+3,col+3) && this.getPlayer(row,col) !== ""){
 						winner = this.getPlayer(row,col);
 						this.gameOver = true;
 						return winner;
 					}
 				}
-				if(row <= (this.rows/2) - 1 && col >= this.columns/2){
+				if(row <= this.rows - 4 && col >= 3){
+					//console.log("diag down left");
 					//check diag down left
 					if(this.getPlayer(row,col) == this.getPlayer(row+1,col-1) && this.getPlayer(row,col) == this.getPlayer(row+2,col-2) && this.getPlayer(row,col) == this.getPlayer(row+3,col-3) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -139,9 +148,10 @@ var modelPrototype = {
 						return winner;
 					}
 				}
-/*
+
 				//needed?
-				if(){
+				if(row >= 3 && this.columns - 4){
+					//console.log("diag up right");
 					//check diag up right
 					if(this.getPlayer(row,col) == this.getPlayer(row,col+1) && this.getPlayer(row,col) == this.getPlayer(row,col+2) && this.getPlayer(row,col) == this.getPlayer(row,col+3) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -150,7 +160,8 @@ var modelPrototype = {
 					}
 				}
 				//needed?
-				if(){
+				if(row >= 3 && col >= 3){
+					//console.log("diag up left");
 					//check diag up left
 					if(this.getPlayer(row,col) == this.getPlayer(row,col+1) && this.getPlayer(row,col) == this.getPlayer(row,col+2) && this.getPlayer(row,col) == this.getPlayer(row,col+3) && this.getPlayer(row,col) != ""){
 						winner = this.getPlayer(row,col);
@@ -158,12 +169,11 @@ var modelPrototype = {
 						return winner;
 					}
 				}
-				*/
-				else {
-					return ""
-				}
+				
+				
 			}
 		}
+		return "";
 		
 	},
 
@@ -179,8 +189,8 @@ var modelPrototype = {
 			this.numOfMoves += 1;
 			
 
-			for(var s=0;s< this.changeListeners.length;s++){
-				var thisView = this.changeListeners[s];
+			for(var c=0; c< this.changeListeners.length; c++){
+				var thisView = this.changeListeners[c];
 				thisView.updateView(row, col, this.playerList[this.currentPlayerIndex]);
 			}
 
@@ -260,14 +270,86 @@ var modelPrototype = {
 Model.prototype = modelPrototype;
 
 var m = new Model(6,8);
+//max move is (5,7);
 m.addPlayer("X");
 m.addPlayer("O");
-//max move is (5,7);
-m.board[0][1] = "X";
+
+/*
+//checks diag down left, passes.
+m.board[0][7] = "X";
+m.board[1][6] = "X";
+m.board[2][5] = "X";
+m.board[3][4] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
+
+/*
+//checks diag down right, passes.
+m.board[0][0] = "X";
+m.board[1][1] = "X";
+m.board[2][2] = "X";
+m.board[3][3] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
+
+/*
+//checks diag up left, passes.
+m.board[4][7] = "X";
+m.board[3][6] = "X";
+m.board[2][5] = "X";
+m.board[1][4] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
+
+/*
+//checks diag up right, passes.
+m.board[3][7] = "X";
+m.board[2][6] = "X";
+m.board[1][5] = "X";
+m.board[0][4] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
+
+/*
+//checks right, passes.
 m.board[0][2] = "X";
 m.board[0][3] = "X";
 m.board[0][4] = "X";
+m.board[0][5] = "X";
 console.log(m.board);
-console.log(m.isDraw());
-console.log(m.gameOver);
 console.log(m.playerWin());
+*/
+
+/*
+//checks left, passes.
+m.board[0][7] = "X";
+m.board[0][6] = "X";
+m.board[0][5] = "X";
+m.board[0][4] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
+
+/*
+//checks up, passes.
+m.board[4][2] = "X";
+m.board[3][2] = "X";
+m.board[2][2] = "X";
+m.board[1][2] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
+
+/*
+//checks down, passes.
+m.board[2][6] = "X";
+m.board[3][6] = "X";
+m.board[4][6] = "X";
+m.board[5][6] = "X";
+console.log(m.board);
+console.log(m.playerWin());
+*/
